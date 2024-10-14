@@ -1,0 +1,227 @@
+#navbar-logo{
+    height:100px;
+    width=auto;
+    padding: 0px 0px 0px 0px;
+}
+
+#examore{
+    font-weight:bold;
+}
+
+.navbar-custom{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    transition: top .2s ease;
+}
+.navbar-custom.hidden{
+    top: -120px;
+}
+
+.navbar-custom .btn{
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-family:'Arial';
+    color: #000;
+    background-color: #ff9900;
+    border: none;
+    border-radius: 40px;
+    margin: 10px;
+    text-decoration: none;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.navbar-custom .btn:hover{
+    background-color: #e68a00;
+    transform: scale(1.1);
+    font-weight:bold;
+}
+
+.nav-item{
+    padding: 0px 120px 0px 0px;
+}
+
+.nav-item a{
+    font-family:'Arial';
+    font-size:20px;
+    transition: transform 0.2s ease;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align: center;
+
+}
+.nav-item a:hover{
+    transform:scale(1.05);
+    font-weight:bold;
+}
+
+
+/* PARTE DEL BODY CONTENT:*/  /*Arancione usato:ff9900*/
+/* Stile globale */
+body {
+    margin:0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+    background: linear-gradient(to bottom, #ffffff, #ff9900);
+}
+
+/* Contenitore principale */
+.container {
+    max-width: 1000px;
+    padding: 50px;
+    margin-top:100px;
+}
+
+/* Stile della sezione logo e titolo */
+.intro img.logo {
+    max-width: 150px;
+    animation: logoFadeIn 2s ease-in-out;
+}
+
+.intro h1 {
+    font-size: 48px;
+    margin: 20px 0;
+    color: #000;
+    animation: titleSlide 2s ease-in-out;
+}
+
+.subtitle {
+    font-size: 20px;
+    color: #333333;
+    margin-bottom: 40px;
+    animation: subtitleSlide 2.5s ease-in-out;
+}
+
+/* Stile dei pulsanti */
+.buttons {
+    margin-bottom: 60px;
+}
+
+.buttons .btn {
+    display: inline-block;
+    padding: 10px 30px;
+    font-size: 18px;
+    color: #000;
+    background-color: #ff9900;
+    border: none;
+    border-radius: 40px;
+    margin: 30px;
+    text-decoration: none;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.buttons .btn:hover {
+    background-color: #e68a00;
+    transform: scale(1.1);
+    font-weight:bold;
+}
+
+/* Sezione Come Funziona */
+#come-funziona h2 {
+    font-size: 36px;
+    margin-bottom: 40px;
+    color: #000;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.steps {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.step {
+    margin: 20px 0;
+    padding: 10px;
+    width: 80%;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 1s ease forwards;
+}
+
+.step h3 {
+    color: #000000;
+}
+
+.step p {
+    color: #333333;
+}
+
+.general-btn{
+    display: inline-block;
+    padding: 10px 30px;
+    font-size: 18px;
+    color: #000;
+    background-color: #ff9900;
+    border: none;
+    border-radius: 40px;
+    margin: 20px 0px 30px 0px;
+    text-decoration: none;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.general-btn:hover{
+    background-color: #e68a00;
+    transform: scale(1.1);
+    font-weight:bold;
+}
+
+.general-btn a{
+    text-decoration: none;
+    color:#000;
+}
+
+/* Animazioni */
+@keyframes logoFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes titleSlide {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes subtitleSlide {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

@@ -1,0 +1,111 @@
+#navbar-logo{
+    height:100px;
+    width=auto;
+    padding: 0px 0px 0px 0px;
+}
+
+#examore{
+    font-weight:bold;
+}
+
+.navbar-custom{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    transition: top .2s ease;
+}
+.navbar-custom.hidden{
+    top: -120px;
+}
+
+.navbar-custom .btn{
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-family:'Arial';
+    color: #000;
+    background-color: #ff9900;
+    border: none;
+    border-radius: 40px;
+    margin: 10px;
+    text-decoration: none;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.navbar-custom .btn:hover{
+    background-color: #e68a00;
+    transform: scale(1.1);
+    font-weight:bold;
+}
+
+.nav-item{
+    padding: 0px 120px 0px 0px;
+}
+
+.nav-item a{
+    font-family:'Arial';
+    font-size:20px;
+    transition: transform 0.2s ease;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align: center;
+
+}
+.nav-item a:hover{
+    transform:scale(1.05);
+    font-weight:bold;
+}
+
+
+/* PARTE DEL BODY CONTENT:*/  /*Arancione usato:ff9900*/
+/* Stile globale */
+body {
+    margin:0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    background: linear-gradient(to bottom, #ffffff, #ff9900);
+}
+
+.container {
+    max-width: 1000px;
+    margin:150px 0px 0px 30px;
+}
+
+.container h1 {
+    animation: titleSlide 2s ease-in-out;
+}
+
+.form-container input{
+    margin-top:20px;
+}
+
+.login-btn{
+    margin-top:50px;
+
+}
+
+
+
+
+
+
+@keyframes titleSlide {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+

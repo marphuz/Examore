@@ -1,0 +1,18 @@
+{% extends 'main/base.html' %}
+
+<head>
+    {% block title %}
+        Examore | Calendar
+    {% endblock %}
+
+    {% load static %}
+    {% block custom_css %}
+        <link rel="stylesheet" href="{% static 'style/calendar.css' %}">
+    {% endblock %}
+</head>
+
+<body>
+    {% block content %}
+         <h1 class="h1-calendar-title">Pagina Calendar</h1>
+    {% endblock %}
+</body>
