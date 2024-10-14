@@ -58,6 +58,44 @@
     font-weight:bold;
 }
 
+.saluto-utente{
+    font-size:20px;
+    margin:0;
+}
+
+.saluto-utente a{
+    text-decoration:none;
+    color:#000;
+    font-weight:bold;
+    cursor:mouse;
+    text-transform:uppercase;
+}
+
+.saluto-utente a:hover{
+    color:#ff9900;
+}
+
+
+
+.logout-btn{
+    margin-left:20px;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 15px;
+    color: #000;
+    background-color: #ff9900;
+    border: none;
+    border-radius: 40px;
+    text-decoration: none;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.logout-btn:hover{
+    background-color: #e68a00;
+    transform: scale(1.1);
+    font-weight:bold;
+}
+
 
 /* PARTE DEL BODY CONTENT:*/  /*Arancione usato:ff9900*/
 /* Stile globale */

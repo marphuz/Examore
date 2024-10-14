@@ -1,27 +1,16 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
-
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Examore | Logout</title>
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>
-        {% block title %}
-            Examore | Register
-        {% endblock %}
-    </title>
-
-    {% load crispy_forms_tags %}
     {% load static %}
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/E.png' %}">
-    <link rel="stylesheet" href="{% static 'style/register.css' %}">
-
+    <link rel="stylesheet" href="{% static 'style/logout.css' %}">
 </head>
-
 <body>
-
     <nav class="navbar navbar-expand-lg navbar-light navbar-custom" id="navbar-home">
         <div class="container-fluid">
           <a class="navbar-brand mb-0 h1" href="/" id="examore">
@@ -49,35 +38,14 @@
     </nav>
 
     <div class="container">
-        <h1>Registrazione Account:</h1>
-        {% if form.errors %}
-            <ul>
-                {% for error in field.errors %}
-                        <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+        <h1>Sei stato disconnesso da Examore</h1>
 
-        <div class="form-container">
-            <form method="post" class="register-form">
-                {% csrf_token %}
-                {{form|crispy}}
-                <button type="submit" class="register-btn">Registrati</button>
-            </form>
-        </div>
-
-
+        <a href="/login">
+            <button class="login-redirect-btn">Vai alla pagina Login</button>
+        </a>
     </div>
-
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="/static/javascript/navbarscroll.js"></script>
-    <script>
-        window.onload = function() {
-            document.getElementByClass("register-form").reset();
-        };
-    </script>
 </body>
-
 </html>
