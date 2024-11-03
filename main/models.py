@@ -65,8 +65,8 @@ class Aula(models.Model):
 class DisponibilitaOraria(models.Model):
     aula = models.ForeignKey(Aula, on_delete=models.CASCADE)
     data = models.DateField()
-    ora_inizio = models.TimeField()
-    ora_fine = models.TimeField()
+    ora_inizio = models.CharField(max_length=6)
+    ora_fine = models.CharField(max_length=6)
 
     class Meta:
         unique_together = ('aula', 'data', 'ora_inizio', 'ora_fine')

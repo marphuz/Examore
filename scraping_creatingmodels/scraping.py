@@ -10,8 +10,7 @@ from selenium.webdriver.support.select import Select
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
-
+from datetime import datetime
 
 # FILE PER TUTTE LE FUNZIONI DI CREATE
 
@@ -34,6 +33,7 @@ def cleanFacolta(corsi_studio_ingegneria):
             real_courses[c] = corsi_studio_ingegneria.get(c)
 
     return real_courses
+
 
 def getFacoltafromAppelli():
     corsi_studio_ingegneria = {}  # dizionario con Facoltà e durata
@@ -198,6 +198,7 @@ def getAppelliInformation(facolta):
     result = [exam_list, date_list]
     return result
 
+
 def getListaAule(wait_time):
     aule_list = []
     for i in range(3):
@@ -218,6 +219,41 @@ def getListaAule(wait_time):
                 aule_list.append(nome_aula)
 
     return aule_list
+
+
+def fixDisponibilita(disponibilita):
+    intervalli_accorpati = []
+    inizio_corrente = None
+    fine_corrente = None
+
+    def to_datetime(ora_str):
+        return datetime.strptime(ora_str, "%H:%M")
+
+    def to_str(ora):
+        return ora.strftime("%H:%M")
+
+    for intervallo in disponibilita:
+        inizio, fine = intervallo.split('-')
+        inizio_dt = to_datetime(inizio)
+        fine_dt = to_datetime(fine)
+        if inizio_dt >= to_datetime("19:00"):
+            break
+
+        if inizio_corrente is None:
+            inizio_corrente = inizio_dt
+            fine_corrente = fine_dt
+        elif fine_corrente == inizio_dt:
+            fine_corrente = fine_dt
+        else:
+            intervalli_accorpati.append(f"{to_str(inizio_corrente)}-{to_str(fine_corrente)}")
+            inizio_corrente = inizio_dt
+            fine_corrente = fine_dt
+
+    if inizio_corrente is not None:
+        intervalli_accorpati.append(f"{to_str(inizio_corrente)}-{to_str(fine_corrente)}")
+
+    return intervalli_accorpati
+
 
 def getAuleDisponibilita(wait_time, aule_disponibilita):
     for i in range(3):
@@ -244,6 +280,7 @@ def getAuleDisponibilita(wait_time, aule_disponibilita):
 
     return aule_disponibilita
 
+
 def getAuleInformation(day, month, year):
     url = 'http://www.aule.unimore.it/index.php?page=0&content=view_prenotazioni&vista=day&area=27&_lang=it&day=' + day + \
           '&month=' + month + '&year=' + year
@@ -260,4 +297,7 @@ def getAuleInformation(day, month, year):
     driver.get(url)
     aule_disponibilita = getAuleDisponibilita(wait_time, aule_disponibilita)
     driver.quit()
+    for a in aule_disponibilita:
+        disp_correct = fixDisponibilita(aule_disponibilita.get(a))
+        aule_disponibilita[a] = disp_correct
     return aule_disponibilita

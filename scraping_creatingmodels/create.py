@@ -1,9 +1,9 @@
 from . import scraping
-from main.models import Facolta, Esame, AppelloEsame, Aula
+from main.models import Facolta, Esame, AppelloEsame, Aula, DisponibilitaOraria
 from django.core.management import call_command
 from django.db import connection
 from selenium.common import TimeoutException
-from datetime import datetime
+from datetime import datetime, date
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -58,9 +58,35 @@ def createAppelli(index=None):
         j += 1
 
 
+def createAule(aule_disponibilita):
+    for a in aule_disponibilita:
+        Aula.objects.get_or_create(nome=a)
 
-    for f in facolta:
-        result = scraping.getAppelliInformation(f.nome)
+
+def createDisponibilitaOraria(aule_disponibilita, data):
+    aule = Aula.objects.all()
+    for a in aule:
+        list_disp = aule_disponibilita.get(a.nome)
+        for d in list_disp:
+            DisponibilitaOraria.objects.get_or_create(
+                aula=a,
+                data=data,
+                ora_inizio=d[:5],
+                ora_fine=d[6:11]
+            )
+
+
+def createAuleDisponibilita(day=None, month=None, year=None):
+    if day is None and month is None and year is None:
+        today = datetime.today()
+        day = today.strftime("%d")
+        month = today.strftime("%m")
+        year = today.strftime("%Y")
+
+    aule_disponibilita = scraping.getAuleInformation(day, month, year)
+    createAule(aule_disponibilita)
+    data = date(int(year), int(month), int(day))
+    createDisponibilitaOraria(aule_disponibilita, data)
 
 
 def deleteDB():
