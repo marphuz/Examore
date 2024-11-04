@@ -16,6 +16,8 @@
     {% load static %}
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/E.png' %}">
     <link rel="stylesheet" href="{% static 'style/cl.css' %}">
+
+    {% load custom_tags %}
 </head>
 
 <body>
@@ -119,6 +121,59 @@
         </div>
 
     </div>
+
+    <div class="filter-container">
+        <h4>Filtri per gli Appelli:</h4>
+        <form id="filter-form">
+            <div>
+                <label class="f-label">Seleziona l'Anno per i Corsi degli Appelli:</label>
+                <select class="f-select">
+                    <option value="">Scegli Anno</option>
+                    <option value="1° anno">1° anno</option>
+                    <option value="2° anno">2° anno</option>
+                    <option value="3° anno">3° anno</option>
+                </select>
+            </div>
+            <div>
+                <label class="f-label">Seleziona il Periodo per i Corsi degli Appelli:</label>
+                <select class="f-select">
+                    <option value="">Scegli Periodo</option>
+                    <option value="1° semestre">1° semestre</option>
+                    <option value="2° semestre">2° semestre</option>
+                    <option value="ciclo annuale unico">Ciclo Annuale Unico</option>
+                </select>
+            </div>
+            <button type="submit" class="filter-button">Applica Filtri</button>
+        </form>
+    </div>
+
+    <div class="aule-container">
+        <div class="title-container">
+            <h4>Disponibilità Aule per il giorno {{data_attuale}}:</h4>
+        </div>
+        <div class="real-aule-container">
+            <div class="left-aule">
+                {% for aula in aule %}
+                    <div class="single-aula">{{aula.nome}}</div>
+                {% endfor %}
+            </div>
+            <div class="right-aule">
+
+                {% for aula in aule %}
+                    <div class="disp">
+                        {% with disponibilita=aule_disponibilita|get_item:aula %}
+                            {% for d in disponibilita%}
+                                <div class="single-disp">[{{d.ora_inizio}}-{{d.ora_fine}}]</div>
+                            {% endfor %}
+                        {% endwith %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+
 
 
 

@@ -102,22 +102,12 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
-/* nice scroll bar */
-::-webkit-scrollbar {
-  width: 5px;
-}
-::-webkit-scrollbar-track {
-  background: #f5f5f5;
-  border-radius: 50px;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--primary-clr);
-  border-radius: 50px;
-}
+
 
 body {
   min-height: 100vh;
   display: flex;
+  flex-direction:column;
   align-items: center;
   justify-content: center;
   background: linear-gradient(to bottom, #ffffff, #d6ccc2);
@@ -126,11 +116,12 @@ body {
   position: relative;
   width: 1300px;
   min-height: 850px;
-  margin: 150px;
+  margin-top:150px;
   padding: 5px;
   color: #fff;
   display: flex;
-  border-radius: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   background-color: #f48c06;
 }
 .left {
@@ -187,7 +178,7 @@ body {
   color: #f48c06;
   transform: scale(1.2);
 }
-.calendar .weekdays {
+.weekdays {
   width: 100%;
   height: 100px;
   display: flex;
@@ -197,7 +188,7 @@ body {
   font-size: 1rem;
   font-weight: 500;
   text-transform: capitalize;
-  margin-top:-100px;
+  margin-top:-70px;
 }
 .weekdays div {
   width: 14.28%;
@@ -214,8 +205,8 @@ body {
   padding: 0 20px;
   font-size: 1rem;
   font-weight: 500;
-  margin-bottom: 20px;
-  margin-top: -50px;
+  margin-bottom:20px;
+  margin-top:-40px;
 }
 .calendar .days .day {
   width: 14.28%;
@@ -322,7 +313,7 @@ body {
 }
 .calendar .goto-today button {
   padding: 5px 10px;
-  border: 1px solid #000;
+  border: 2px solid #000;
   border-radius: 10px;
   background-color:#ffd000 ;
   cursor: pointer;
@@ -427,6 +418,165 @@ body {
   margin-left: 15px;
   pointer-events: none;
 }
+
+
+.filter-container{
+    display:flex;
+    flex-direction:column;
+    background:#f48c06;
+    margin-top:0px;
+    margin-left:auto;
+    margin-right:auto;
+    width:1300px;
+    height: 300px;
+    align-items:center;
+    font-family: "Poppins", sans-serif;
+
+}
+
+.filter-container h4{
+    color:#000;
+    font-size: 35px;
+    margin-top:20px;
+    margin-bottom:50px;
+    text-align:center;
+    font-weight:600;
+}
+
+.f-label{
+    color:#000;
+    margin-bottom:30px;
+    font-size:20px;
+    margin-right: 80px;
+}
+
+.f-select{
+    background:#ffd000;
+    padding: 5px 20px;
+    border: 2px solid #000;
+    border-radius: 10px;
+    cursor:pointer;
+}
+
+.f-select:hover{
+    transform:scale(1.07);
+    background:#ffb700;
+}
+
+.filter-button{
+    background:#ffd000;
+    margin-left: 300px;
+    padding: 10px 30px;
+    border: 2px solid #000;
+    border-radius:10px;
+}
+
+.filter-button:hover{
+    transform:scale(1.07);
+    background:#ffb700;
+}
+
+
+.aule-container{
+    display:flex;
+    flex-direction:column;
+    margin-top:0px;
+    margin-left:auto;
+    margin-right:auto;
+    margin-bottom:200px;
+    min-width:1300px;
+    min-height: 1360px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    font-family: "Poppins", sans-serif;
+}
+
+.title-container{
+    background:#f48c06;
+    color:#000;
+    width:1300px;
+    height:100px;
+    border-bottom: 2px solid #000;
+    text-align: center;
+}
+
+.title-container h4{
+    margin-top: 30px;
+    font-size:35px;
+    font-weight:600;
+}
+
+.real-aule-container{
+    display:flex;
+    flex:1;
+    height:auto;
+    border-bottom-left-radius:10px;
+    border-bottom-right-radius:10px;
+}
+
+.left-aule{
+    z-index:1;
+    height:1360px;
+    width:390px;
+    border-right: 2px solid #000;
+    display:flex;
+    flex-direction:column;
+    border-bottom-left-radius:10px;
+}
+
+.right-aule{
+    height:1360px;
+    width:910px;
+    display:flex;
+    flex-direction:column;
+    border-bottom-right-radius:10px;
+    background:red;
+}
+
+.single-aula{
+    min-height:80px;
+    width:390px;
+    color:#000;
+    background:#fed0bb;
+    border-bottom: 2px solid #000;
+    border-left: 2px solid #000;
+    border-right: 2px solid #000;
+    text-align:center;
+    padding-top:20px;
+    font-size:20px;
+    font-weight:550;
+
+}
+
+.disp{
+    height:80px;
+    width:910px;
+    color:#000;
+    background:#ffe5e5;
+    border-bottom: 2px solid #000;
+    border-right: 2px solid #000;
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    gap: 10px;
+    padding:20px;
+}
+
+.single-disp{
+    width: 150px;
+    height:40px;
+    background:#ff9500;
+    border: 2px solid #000;
+    border-radius:20px;
+    display:flex;
+    justify-content:center;
+    padding:5px;
+}
+
+
+
+
+
 
 
 /* media queries */
