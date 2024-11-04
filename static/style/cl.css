@@ -197,6 +197,7 @@ body {
   align-items: center;
   justify-content: center;
 }
+
 .calendar .days {
   width: 100%;
   display: flex;
@@ -367,10 +368,10 @@ body {
 }
 .events {
   margin-left:15px;
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 800px;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: auto hidden;
   display: flex;
   flex-direction: column;
   padding-left: 4px;
@@ -388,8 +389,8 @@ body {
   color: #fff;
   background: #e85d04;
   cursor: pointer;
-  border-radius:30px;
-  margin-bottom:10px;
+  border-radius:10px;
+  margin-bottom:20px;
 }
 
 .events .event:hover {
@@ -402,10 +403,11 @@ body {
   pointer-events: none;
 }
 .events .event .title .event-title {
-  font-size: 1rem;
-  font-weight: 400;
+  font-size: 12px;
+  font-weight: 600;
   margin-left: 20px;
   color:#000;
+  margin-top:7px;
 }
 .events .event i {
   color: #000;
@@ -459,21 +461,31 @@ body {
 }
 
 .f-select:hover{
-    transform:scale(1.07);
     background:#ffb700;
 }
 
 .filter-button{
-    background:#ffd000;
-    margin-left: 300px;
-    padding: 10px 30px;
+    background:#fed0bb;
+    margin-left: 250px;
+    padding: 10px 20px;
     border: 2px solid #000;
     border-radius:10px;
 }
 
 .filter-button:hover{
     transform:scale(1.07);
-    background:#ffb700;
+}
+
+.reset-filter-button{
+    background:#d5d5d5;
+    margin-left: 10px;
+    padding: 10px 20px;
+    border: 2px solid #000;
+    border-radius:10px;
+}
+
+.reset-filter-button:hover{
+    transform:scale(1.07);
 }
 
 
@@ -496,7 +508,7 @@ body {
     color:#000;
     width:1300px;
     height:100px;
-    border-bottom: 2px solid #000;
+    border-top: 2px solid #000;
     text-align: center;
 }
 
@@ -530,7 +542,6 @@ body {
     display:flex;
     flex-direction:column;
     border-bottom-right-radius:10px;
-    background:red;
 }
 
 .single-aula{
@@ -571,11 +582,91 @@ body {
     display:flex;
     justify-content:center;
     padding:5px;
+    font-size:18px;
+}
+
+.aule-filter{
+    display:flex;
+    width:1300px;
+    height:300px;
+    background:#f48c06;
+    flex-direction:column;
+    text-align:center;
+    border-bottom:2px solid #000;
+}
+
+.aule-filter h4{
+    margin-top:20px;
+    font-size:25px;
+    font-weight:600;
+    margin-top:-10px;
+    margin-bottom: 20px;
+}
+
+.aula-label{
+    color:#000;
+    margin-bottom:30px;
+    font-size:20px;
+    margin-right: 80px;
+}
+
+.aula-select{
+    background:#ffd000;
+    padding: 5px 20px;
+    border: 2px solid #000;
+    border-radius: 10px;
+    cursor:pointer;
+
+}
+
+.aula-select:hover{
+    background:#ffb700;
 }
 
 
+.update-disp{
+    gap:0px;
+}
 
+.disp-input{
+  width: 200px;
+  height: 40px;
+  outline: none;
+  border: 2px solid #000;
+  border-radius: 5px;
+  padding: 0 20px;
+  color: #000;
+  border-radius: 5px;
+}
 
+.disp-btn{
+  padding: 7px 20px;
+  border: 2px solid #000;
+  border-radius: 10px;
+  background-color:#ffd000 ;
+  cursor: pointer;
+  color: #000;
+  margin-left:10px;
+  margin-right:0px;
+}
+
+.disp-btn:hover{
+    background:#ffb700;
+}
+
+.aule-btn{
+  padding: 10px 20px;
+  border: 2px solid #000;
+  border-radius: 10px;
+  background-color:#fed0bb;
+  cursor: pointer;
+  color: #000;
+  margin-top:50px;
+}
+
+.aule-btn:hover{
+    transform:scale(1.07)
+}
 
 
 
@@ -639,24 +730,4 @@ body {
   .right .today-date {
     padding: 20px;
   }
-}
-
-.credits {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  text-align: center;
-  padding: 10px;
-  font-size: 12px;
-  color: #fff;
-  background-color: #b38add;
-}
-.credits a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
-}
-.credits a:hover {
-  text-decoration: underline;
 }

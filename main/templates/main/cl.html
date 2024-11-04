@@ -90,24 +90,18 @@
                 <div class="event-day"></div>
             </div>
             <div class="events">
-                <div class="event">
-                    <div class="title">
-                        <i class="fas fa-circle"></i>
-                        <h3 class="event-title">Event 1</h3>
+                {% for appello in appelli %}
+                    <div class="event">
+                        <div class="title">
+                            <i class="fas fa-circle"></i>
+                            <h3 class="event-title">{{appello.esame}}</h3>
+                        </div>
+                        <div class="event-time">
+                            {{appello.data}}
+                        </div>
                     </div>
-                    <div class="event-time">
-                        10:00AM-12:00 PM
-                    </div>
-                </div>
-                <div class="event">
-                    <div class="title">
-                        <i class="fas fa-circle"></i>
-                        <h3 class="event-title">Event 1</h3>
-                    </div>
-                    <div class="event-time">
-                        10:00AM-12:00 PM
-                    </div>
-                </div>
+                {% endfor %}
+
                 <div class="event">
                     <div class="title">
                         <i class="fas fa-circle"></i>
@@ -127,23 +121,25 @@
         <form id="filter-form">
             <div>
                 <label class="f-label">Seleziona l'Anno per i Corsi degli Appelli:</label>
-                <select class="f-select">
+                <select class="f-select" name="anno_esame">
                     <option value="">Scegli Anno</option>
-                    <option value="1° anno">1° anno</option>
-                    <option value="2° anno">2° anno</option>
-                    <option value="3° anno">3° anno</option>
+                    <option value="1" >1° anno</option>
+                    <option value="2">2° anno</option>
+                    <option value="3">3° anno</option>
                 </select>
             </div>
             <div>
                 <label class="f-label">Seleziona il Periodo per i Corsi degli Appelli:</label>
-                <select class="f-select">
+                <select class="f-select" name="periodo_esame">
                     <option value="">Scegli Periodo</option>
-                    <option value="1° semestre">1° semestre</option>
-                    <option value="2° semestre">2° semestre</option>
-                    <option value="ciclo annuale unico">Ciclo Annuale Unico</option>
+                    <option value="1">1° semestre</option>
+                    <option value="2">2° semestre</option>
+                    <option value="3">Ciclo Annuale Unico</option>
                 </select>
             </div>
-            <button type="submit" class="filter-button">Applica Filtri</button>
+            <button type="submit" class="filter-button">Applica Filtri Appelli</button>
+            <a href="/calendar"><button class="reset-filter-button">Resetta Filtri Appelli</button></a>
+
         </form>
     </div>
 
@@ -151,6 +147,28 @@
         <div class="title-container">
             <h4>Disponibilità Aule per il giorno {{data_attuale}}:</h4>
         </div>
+        <div class="aule-filter">
+            <h4>Filtri per le Aule:</h4>
+            <form id="aule-form">
+                <div>
+                    <label class="aula-label">Mostra le disponibilità dell'aula:</label>
+                    <select class="aula-select" name="aula_visible">
+                        <option value="">Tutte le aule</option>
+                        {% for aula in aule %}
+                            <option value="{{aula.nome}}">{{aula.nome}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <h5>Ricerca Disponibilità Aule per il giorno segnato sul calendario:</h5>
+                <div class="update-disp">
+                    <input type="text" placeholder="gg/mm/yyyy" class="disp-input">
+                    <button  type="submit" class="disp-btn">Mostra disponibilità</button>
+                </div>
+                <button type="submit" class="aule-btn">Applica Filtri Aule</button>
+            </form>
+
+        </div>
+
         <div class="real-aule-container">
             <div class="left-aule">
                 {% for aula in aule %}
@@ -162,9 +180,13 @@
                 {% for aula in aule %}
                     <div class="disp">
                         {% with disponibilita=aule_disponibilita|get_item:aula %}
-                            {% for d in disponibilita%}
-                                <div class="single-disp">[{{d.ora_inizio}}-{{d.ora_fine}}]</div>
-                            {% endfor %}
+                            {% if disponibilita %}
+                                {% for d in disponibilita%}
+                                    <div class="single-disp">{{d.ora_inizio}}-{{d.ora_fine}}</div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="single-disp">Nessuna disponibilità</div>
+                            {% endif %}
                         {% endwith %}
                     </div>
                 {% endfor %}
@@ -172,6 +194,8 @@
         </div>
 
     </div>
+
+
 
 
 
