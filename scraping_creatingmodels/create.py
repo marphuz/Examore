@@ -58,8 +58,9 @@ def createAppelli(index=None):
         j += 1
 
 
-def createAule(aule_disponibilita):
-    for a in aule_disponibilita:
+def createAule():
+    aule_list = scraping.getAule()
+    for a in aule_list:
         Aula.objects.get_or_create(nome=a)
 
 
@@ -84,28 +85,67 @@ def createAuleDisponibilita(day=None, month=None, year=None):
         year = today.strftime("%Y")
 
     aule_disponibilita = scraping.getAuleInformation(day, month, year)
-    createAule(aule_disponibilita)
     data = date(int(year), int(month), int(day))
     createDisponibilitaOraria(aule_disponibilita, data)
 
 
+
+
 def deleteDB():
+    DisponibilitaOraria.objects.all().delete()
+    Aula.objects.all().delete()
+    AppelloEsame.objects.all().delete()
+    Esame.objects.all().delete()
     Facolta.objects.all().delete()
 
 
-def updateDB():
-    old_facolta = list(Facolta.objects.all())
-    try:
-        deleteDB()
-    except:
-        raise SystemError("Errore nella cancellazione del DB attuale")
-
+def resetDB(old_facolta, old_esami, old_appelli, old_aule, old_disp):
     for facolta in old_facolta:
         facolta.pk = None
         facolta.save()
 
+    for esame in old_esami:
+        esame.pk = None
+        esame.save()
+
+    for appello in old_appelli:
+        appello.pk = None
+        appello.save()
+
+    for aula in old_aule:
+        aula.pk = None
+        aula.save()
+
+    for disp in old_disp:
+        disp.pk = None
+        disp.save()
+
+
+def updateDB():
+    old_facolta = list(Facolta.objects.all())
+    old_esami = list(Esame.objects.all())
+    old_appelli = list(AppelloEsame.objects.all())
+    old_aule = list(Aula.objects.all())
+    old_disp = list(DisponibilitaOraria.objects.all())
+
+    try:
+        deleteDB()
+        createFacolta()
+        createEsami()
+        createAppelli()
+        createAule()
+        createAuleDisponibilita()
+    except Exception as e:
+        print(e)
+        resetDB(old_facolta, old_esami, old_appelli, old_aule, old_disp)
+
 
 def main():
-    facolta = Facolta.objects.all()
-    for f in facolta:
-        print(scraping.getFacultyCod(f.nome))
+    try:
+        updateDB()
+    except Exception as e:
+        print(e)
+
+
+if __name__ == "__main__":
+    main()

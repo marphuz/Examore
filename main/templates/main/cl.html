@@ -78,15 +78,22 @@
                 <div class="goto-today">
                     <div class="goto">
                         <input type="text" placeholder="gg/mm/yyyy" class="date-input">
-                        <button class="goto-btn">Cerca</button>
+                        <button class="goto-btn" type="submit">Cerca</button>
                     </div>
                     <button class="today-btn">Oggi</button>
                 </div>
+                <form id="dateForm" method="POST" action="{% url 'calendar' %}" style="display: none;">
+                    {% csrf_token %}
+                    <input type="hidden" name="day" id="selectedDay">
+                    <input type="hidden" name="month" id="selectedMonth">
+                    <input type="hidden" name="year" id="selectedYear">
+                </form>
             </div>
 
         </div>
         <div class="right">
             <div class="today-date">
+                <h4>{{data_attuale}}</h4>
                 <div class="event-day"></div>
             </div>
             <div class="events">
@@ -119,6 +126,14 @@
     <div class="filter-container">
         <h4>Filtri per gli Appelli:</h4>
         <form id="filter-form">
+            {% csrf_token %}
+            <div>
+                <label class="f-label">Seleziona il Giorno:</label>
+                <select class="f-select" name="giorno_esame">
+                    <option value="">Data Odierna</option>
+                    <option value="{{data_attuale}}" >Giorno cliccato sul calendario</option>
+                </select>
+            </div>
             <div>
                 <label class="f-label">Seleziona l'Anno per i Corsi degli Appelli:</label>
                 <select class="f-select" name="anno_esame">
@@ -149,22 +164,24 @@
         </div>
         <div class="aule-filter">
             <h4>Filtri per le Aule:</h4>
-            <form id="aule-form">
+            <form id="aule-form" method="post" action="{% url 'calendar' %}">
+                {% csrf_token %}
                 <div>
                     <label class="aula-label">Mostra le disponibilità dell'aula:</label>
                     <select class="aula-select" name="aula_visible">
                         <option value="">Tutte le aule</option>
-                        {% for aula in aule %}
+                        {% for aula in aule_select_filter %}
                             <option value="{{aula.nome}}">{{aula.nome}}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <h5>Ricerca Disponibilità Aule per il giorno segnato sul calendario:</h5>
+                <h5>Ricerca Disponibilità Aule per il giorno segnato:</h5>
                 <div class="update-disp">
-                    <input type="text" placeholder="gg/mm/yyyy" class="disp-input">
+                    <input type="text" placeholder="gg/mm/yyyy" class="disp-input" name="disp-input">
                     <button  type="submit" class="disp-btn">Mostra disponibilità</button>
                 </div>
                 <button type="submit" class="aule-btn">Applica Filtri Aule</button>
+                <a href="/calendar"><button class="reset-aule-button">Resetta Filtri Aule</button></a>
             </form>
 
         </div>
@@ -185,7 +202,7 @@
                                     <div class="single-disp">{{d.ora_inizio}}-{{d.ora_fine}}</div>
                                 {% endfor %}
                             {% else %}
-                                <div class="single-disp">Nessuna disponibilità</div>
+                                <div class="single-disp">No disp.</div>
                             {% endif %}
                         {% endwith %}
                     </div>
@@ -194,12 +211,6 @@
         </div>
 
     </div>
-
-
-
-
-
-
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

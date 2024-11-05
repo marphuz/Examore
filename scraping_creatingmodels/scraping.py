@@ -11,6 +11,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime
+from main.models import Aula
 
 # FILE PER TUTTE LE FUNZIONI DI CREATE
 
@@ -221,6 +222,18 @@ def getListaAule(wait_time):
     return aule_list
 
 
+def getAule():
+    url = 'http://www.aule.unimore.it/index.php?page=0&content=view_prenotazioni&vista=day&area=27&_lang=it&day='
+    path = 'D:/ChromeDriver/chromedriver-win64/chromedriver.exe'
+    service = Service(executable_path=path)
+    driver = webdriver.Chrome(service=service)
+    driver.get(url)
+    wait_time = WebDriverWait(driver, 10)
+    aule_list = getListaAule(wait_time)
+
+    return aule_list
+
+
 def fixDisponibilita(disponibilita):
     intervalli_accorpati = []
     inizio_corrente = None
@@ -301,3 +314,5 @@ def getAuleInformation(day, month, year):
         disp_correct = fixDisponibilita(aule_disponibilita.get(a))
         aule_disponibilita[a] = disp_correct
     return aule_disponibilita
+
+

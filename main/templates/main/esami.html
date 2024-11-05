@@ -29,19 +29,55 @@
               <a class="nav-link active" aria-current="page" href="/">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="/esami">Exams</a>
+              <a class="nav-link active" href="/esami">Esami</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="/calendar">Calendar</a>
+              <a class="nav-link active" href="/calendar">Calendario</a>
             </li>
           </ul>
           <span></span>
+            {% if user.is_authenticated %}
+                <p class="saluto-utente">Ciao <a class="username">{{ user.username }}</a></p>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            {% endif %}
         </div>
       </div>
     </nav>
 
     <div class="container">
-        <h1>Pagina Esami</h1>
+        <h1 id="exam-title">Esami</h1>
+
+        {% if not user.is_authenticated %}
+            <div class="advise">
+                <h4>Per accedere a questa pagina è necessario aver eseguito il Login</h4>
+                <a href="/login">
+                    <button class="login-redirect-btn">Vai alla pagina Login</button>
+                </a>
+            </div>
+
+        {% else %}
+            <div class="main-content">
+                <h5>Di seguito vengono mostrate tutte le facoltà del Dipartimento di Ingegneria "Enzo Ferrari"
+                    presenti sul nostro sistema
+                </h5>
+                <div class="card-container">
+                    {% for f in facolta%}
+                        <div class="card">
+                            <h2 class="card-title">{{ f.nome }}</h2>
+                            <a href="{% url 'calendar' %}?facolta_id={{ f.id }}" class="card-link">Visualizza Calendario</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+
+
+
+
     </div>
 
 

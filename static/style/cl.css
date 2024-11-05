@@ -430,7 +430,7 @@ body {
     margin-left:auto;
     margin-right:auto;
     width:1300px;
-    height: 300px;
+    height: 400px;
     align-items:center;
     font-family: "Poppins", sans-serif;
 
@@ -479,6 +479,7 @@ body {
 .reset-filter-button{
     background:#d5d5d5;
     margin-left: 10px;
+    margin-right:270px;
     padding: 10px 20px;
     border: 2px solid #000;
     border-radius:10px;
@@ -530,7 +531,6 @@ body {
     z-index:1;
     height:1360px;
     width:390px;
-    border-right: 2px solid #000;
     display:flex;
     flex-direction:column;
     border-bottom-left-radius:10px;
@@ -665,6 +665,18 @@ body {
 }
 
 .aule-btn:hover{
+    transform:scale(1.07)
+}
+
+.reset-aule-button{
+    background:#d5d5d5;
+    margin-left: 10px;
+    padding: 10px 20px;
+    border: 2px solid #000;
+    border-radius:10px;
+}
+
+.reset-aule-button:hover{
     transform:scale(1.07)
 }
 

@@ -25,6 +25,7 @@
 
         daysEl.innerHTML = "";
 
+
         // Giorni del mese precedente
         for (let x = firstDay; x > 0; x--) {
             const day = document.createElement("div");
@@ -42,18 +43,26 @@
                 day.classList.add("today");
             }
             day.textContent = i;
-            const selectedDate = new Date(currentYear, currentMonth, i);
-            const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
-            eventDayEl.textContent = selectedDate.toLocaleDateString('it-IT', options);
+
             day.addEventListener("click", () => {
                 // Rimuove l'evidenziazione "today" da tutti i giorni
                 document.querySelectorAll(".day").forEach(day => day.classList.remove("today"));
                 // Aggiunge l'evidenziazione al giorno selezionato
                 day.classList.add("today");
-                // Aggiorna il contenuto di event-day con il giorno selezionato
+                // Cattura il giorno, mese e anno selezionati
                 const selectedDate = new Date(currentYear, currentMonth, i);
-                const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
-                eventDayEl.textContent = selectedDate.toLocaleDateString('it-IT', options);
+                const dayValue = selectedDate.getDate();
+                const monthValue = selectedDate.getMonth() + 1;
+                const yearValue = selectedDate.getFullYear();
+
+                // Aggiorna il form nascosto con i valori selezionati
+                document.getElementById("selectedDay").value = dayValue;
+                document.getElementById("selectedMonth").value = monthValue;
+                document.getElementById("selectedYear").value = yearValue;
+                // Invia automaticamente il form
+                document.getElementById("dateForm").submit();
+
+
             });
             daysEl.appendChild(day);
         }
