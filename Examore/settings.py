@@ -142,6 +142,21 @@ SOCIALACCOUNT_PROVIDERS = {
             'client_id': '1060874290024-7k7t714kri239i06jbb4tqvsi1u0hmr2.apps.googleusercontent.com',
             'secret': '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',
             'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+            'https://www.googleapis.com/auth/calendar',
+            'https://www.googleapis.com/auth/calendar.events'
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'offline',
+            'prompt': 'consent'
         }
     }
 }
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)

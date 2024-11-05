@@ -10,7 +10,6 @@ from types import NoneType
 import re
 
 
-
 # FILTER FUNCTIONS:
 
 def filterAppelli(anno_esame, periodo_esame, data_stringa, facolta_id=None):
@@ -63,10 +62,6 @@ def checkDisp(disp_input):
     year = disp_input[6:]
 
     return day, month, year
-
-
-
-
 
 
 # VIEWS :
@@ -141,7 +136,7 @@ def calendar(request):
         "periodo_esame": periodo_esame,
         "aule_select_filter": aule_select_filter
     }
-    return render(request, "main/cl.html", context)
+    return render(request, "main/calendar.html", context)
 
 
 def login_view(request):

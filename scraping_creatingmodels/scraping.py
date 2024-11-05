@@ -1,5 +1,7 @@
-import time
 import re
+import time
+from datetime import datetime
+from main.models import Aula
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver import Chrome
@@ -10,10 +12,10 @@ from selenium.webdriver.support.select import Select
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from datetime import datetime
-from main.models import Aula
 
-# FILE PER TUTTE LE FUNZIONI DI CREATE
+
+
+# FILE PER TUTTE LE FUNZIONI DI SCRAPING:
 
 # COSTANTI:
 APPELLI_DIEF_COD = "10005"
@@ -22,7 +24,14 @@ TITLE_AULE_PAGINA_2 = "a[title='Aula P1.5 (Fa-1e), Aula P1.6 (Fa-1f), Aula P2.1 
 TITLE_AULE_PAGINA_3 = "a[title='Lab. P0.1 (FA-0A), Lab. P2.5 (FA-2E), Laboratorio P2.6 (FA-2F Linfa)']"
 
 
-# FUNZIONI DI SUPPORTO:
+# FUNZIONI:
+def initializeDriver():
+    chrome_options = Options()
+    #chrome_options.add_argument("--headless")
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+
+    return driver
 
 def cleanFacolta(corsi_studio_ingegneria):
     real_courses = {}
@@ -39,9 +48,7 @@ def cleanFacolta(corsi_studio_ingegneria):
 def getFacoltafromAppelli():
     corsi_studio_ingegneria = {}  # dizionario con Facoltà e durata
     url = "https://www.esse3.unimore.it/Guide/PaginaListaAppelli.do"
-    path = 'D:/ChromeDriver/chromedriver-win64/chromedriver.exe'
-    service = Service(executable_path=path)
-    driver = webdriver.Chrome(service=service)
+    driver = initializeDriver()
     driver.get(url)
     wait_time = WebDriverWait(driver, 5)
     accept_cookie_button = wait_time.until(EC.element_to_be_clickable((By.ID, "c-p-bn")))
@@ -127,9 +134,7 @@ def getExamsInformation(faculty_code, year=None):
     crediti_list = []
     line_index = 0
     url = 'https://unimore.coursecatalogue.cineca.it/cerca-insegnamenti'
-    path = 'D:/ChromeDriver/chromedriver-win64/chromedriver.exe'
-    service = Service(executable_path=path)
-    driver = webdriver.Chrome(service=service)
+    driver = initializeDriver()
     driver.get(url)
     wait_time = WebDriverWait(driver, 10)
     accept_cookie_button = wait_time.until(EC.element_to_be_clickable((By.ID, "c-p-bn")))
@@ -170,9 +175,7 @@ def getAppelliInformation(facolta):
     exam_list = []
     date_list = []
     url = 'https://www.esse3.unimore.it/Guide/PaginaListaAppelli.do'
-    path = 'D:/ChromeDriver/chromedriver-win64/chromedriver.exe'
-    service = Service(executable_path=path)
-    driver = webdriver.Chrome(service=service)
+    driver = initializeDriver()
     driver.get(url)
     wait_time = WebDriverWait(driver, 10)
     accept_cookie_button = wait_time.until(EC.element_to_be_clickable((By.ID, "c-p-bn")))
@@ -224,9 +227,7 @@ def getListaAule(wait_time):
 
 def getAule():
     url = 'http://www.aule.unimore.it/index.php?page=0&content=view_prenotazioni&vista=day&area=27&_lang=it&day='
-    path = 'D:/ChromeDriver/chromedriver-win64/chromedriver.exe'
-    service = Service(executable_path=path)
-    driver = webdriver.Chrome(service=service)
+    driver = initializeDriver()
     driver.get(url)
     wait_time = WebDriverWait(driver, 10)
     aule_list = getListaAule(wait_time)
@@ -297,9 +298,7 @@ def getAuleDisponibilita(wait_time, aule_disponibilita):
 def getAuleInformation(day, month, year):
     url = 'http://www.aule.unimore.it/index.php?page=0&content=view_prenotazioni&vista=day&area=27&_lang=it&day=' + day + \
           '&month=' + month + '&year=' + year
-    path = 'D:/ChromeDriver/chromedriver-win64/chromedriver.exe'
-    service = Service(executable_path=path)
-    driver = webdriver.Chrome(service=service)
+    driver = initializeDriver()
     driver.get(url)
     wait_time = WebDriverWait(driver, 10)
     aule_disponibilita = {}

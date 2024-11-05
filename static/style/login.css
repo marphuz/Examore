@@ -123,6 +123,30 @@ body {
     font-weight:bold;
 }
 
+.google-btn{
+    margin-top:20px;
+    display: inline-block;
+    padding: 10px 30px;
+    font-size: 18px;
+    color: #000;
+    background-color: #fff;
+    border-width:2px;
+    border-color:#000;
+    border-radius: 40px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+.google-btn:hover{
+    transform: scale(1.1);
+    font-weight:bold;
+}
+
+#google-logo{
+    height:30px;
+    width:auto;
+}
+
 
 
 

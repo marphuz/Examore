@@ -31,10 +31,10 @@
               <a class="nav-link active" aria-current="page" href="/">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="/esami">Exams</a>
+              <a class="nav-link active" href="/esami">Esami</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="/calendar">Calendar</a>
+              <a class="nav-link active" href="/calendar">Calendario</a>
             </li>
           </ul>
           <span></span>
@@ -68,6 +68,17 @@
                     qui
                 </a>
         </p>
+
+        <div class="google-container">
+            {% load socialaccount %}
+            <a href="{% provider_login_url 'google' %}?next=/">
+
+                <button class="google-btn">
+                    <img src="https://developers.google.com/identity/images/g-logo.png" id="google-logo">
+                    Sign-in with Google
+                </button>
+            </a>
+        </div>
     </div>
 
 
