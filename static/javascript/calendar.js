@@ -1,3 +1,160 @@
+//GESTIONE AJAX:
+
+document.addEventListener("DOMContentLoaded", function () {
+        // Seleziona i form con ID "filter-form" e "aule-form"
+        const filterForm = document.getElementById("filter-form");
+        const auleForm = document.getElementById("aule-form");
+        const dateForm = document.getElementById("dateForm");
+
+        // Funzione per gestire la richiesta AJAX
+        function handleFormSubmit(event, form) {
+            event.preventDefault();  // Previeni il comportamento predefinito del form
+
+            // Ottieni i dati del form
+            const formData = new FormData(form);
+
+            // Esegui la richiesta AJAX
+            fetch(form.action, {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"  // Identifica la richiesta come AJAX
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Aggiorna i campi nella pagina con i dati ricevuti
+                console.log("Data ricevuta:", data);
+                updatePageContent(data);
+            })
+            .catch(error => console.error("Errore:", error));
+        }
+
+        // Aggiungi l'evento submit ai form
+        if (filterForm) {
+            filterForm.addEventListener("submit", function (event) {
+                handleFormSubmit(event, filterForm);
+            });
+        }
+        if (auleForm) {
+            auleForm.addEventListener("submit", function (event) {
+                handleFormSubmit(event, auleForm);
+            });
+        }
+        if (dateForm){
+            dateForm.addEventListener("submit", function(event){
+                handleFormSubmit(event, dateForm);
+            });
+        }
+
+        // Funzione per aggiornare la pagina con i dati ricevuti
+        function updatePageContent(data) {
+            // Aggiorna gli appelli
+            const eventsContainer = document.querySelector(".events");
+            eventsContainer.innerHTML = "";  // Pulisci il contenitore
+
+            if (data.appelli && data.appelli.length > 0) {
+                data.appelli.forEach(appello => {
+                    const eventHTML = `
+                        <div class="event">
+                            <div class="title">
+                                <i class="fas fa-circle"></i>
+                                <h3 class="event-title">${appello.esame}</h3>
+                            </div>
+                            <div class="event-time">${appello.data}</div>
+                        </div>`;
+                    eventsContainer.insertAdjacentHTML("beforeend", eventHTML);
+                });
+            } else {
+                eventsContainer.innerHTML = `
+                    <div class="event">
+                        <div class="title">
+                            <i class="fas fa-circle"></i>
+                            <h3 class="event-title">Nessun Appello Trovato</h3>
+                        </div>
+                    </div>`;
+            }
+
+            // Aggiorna le disponibilità delle aule
+            const leftAuleContainer = document.querySelector(".left-aule");
+            const rightAuleContainer = document.querySelector(".right-aule");
+            leftAuleContainer.innerHTML = "";
+            rightAuleContainer.innerHTML = "";
+
+            for (const [aula, disponibilita] of Object.entries(data.aule_disponibilita)) {
+                leftAuleContainer.insertAdjacentHTML("beforeend", `<div class="single-aula">${aula}</div>`);
+                if (disponibilita === "No disp.") {
+                    rightAuleContainer.insertAdjacentHTML("beforeend", `<div class="single-disp">No disp.</div>`);
+                } else {
+                    const dispHTML = disponibilita.map(d => `<div class="single-disp">${d.ora_inizio}-${d.ora_fine}</div>`).join("");
+                    rightAuleContainer.insertAdjacentHTML("beforeend", `<div class="disp">${dispHTML}</div>`);
+                }
+            }
+
+            // Aggiorna la data visualizzata
+            document.getElementById("data-titolo").textContent = data.data_attuale + ":";
+        }
+});
+
+function updatePageContent(data) {
+            // Aggiorna gli appelli
+            const eventsContainer = document.querySelector(".events");
+            eventsContainer.innerHTML = "";  // Pulisci il contenitore
+
+            if (data.appelli && data.appelli.length > 0) {
+                data.appelli.forEach(appello => {
+                    const eventHTML = `
+                        <div class="event">
+                            <div class="title">
+                                <i class="fas fa-circle"></i>
+                                <h3 class="event-title">${appello.esame}</h3>
+                            </div>
+                            <div class="event-time">${appello.data}</div>
+                        </div>`;
+                    eventsContainer.insertAdjacentHTML("beforeend", eventHTML);
+                });
+            } else {
+                eventsContainer.innerHTML = `
+                    <div class="event">
+                        <div class="title">
+                            <i class="fas fa-circle"></i>
+                            <h3 class="event-title">Nessun Appello Trovato</h3>
+                        </div>
+                    </div>`;
+            }
+
+            // Aggiorna le disponibilità delle aule
+            const leftAuleContainer = document.querySelector(".left-aule");
+            const rightAuleContainer = document.querySelector(".right-aule");
+            leftAuleContainer.innerHTML = "";
+            rightAuleContainer.innerHTML = "";
+
+            for (const [aula, disponibilita] of Object.entries(data.aule_disponibilita)) {
+                leftAuleContainer.insertAdjacentHTML("beforeend", `<div class="single-aula">${aula}</div>`);
+                if (disponibilita === "No disp.") {
+                    rightAuleContainer.insertAdjacentHTML("beforeend", `<div class="single-disp">No disp.</div>`);
+                } else {
+                    const dispHTML = disponibilita.map(d => `<div class="single-disp">${d.ora_inizio}-${d.ora_fine}</div>`).join("");
+                    rightAuleContainer.insertAdjacentHTML("beforeend", `<div class="disp">${dispHTML}</div>`);
+                }
+            }
+
+            // Aggiorna la data visualizzata
+            document.getElementById("data-titolo").textContent = data.data_attuale + ":";
+        }
+
+
+//OTTENERE IL CSRF TOKEN:
+function getCSRFToken() {
+    const csrfTokenElement = document.querySelector("input[name='csrfmiddlewaretoken']");
+    return csrfTokenElement ? csrfTokenElement.value : null;
+}
+
+
+
+
+
+//CALENDARIO:
 // Variabili per il mese e l'anno correnti
     let date = new Date();
     let currentMonth = date.getMonth();
@@ -60,8 +217,33 @@
                 document.getElementById("selectedMonth").value = monthValue;
                 document.getElementById("selectedYear").value = yearValue;
                 // Invia automaticamente il form
-                document.getElementById("dateForm").submit();
+                //document.getElementById("dateForm").submit();
+                //handleFormSubmit(new Event("submit"), dateForm);
+                //dateForm.submit();
 
+                // Crea manualmente i dati del form
+                const formData = new FormData();
+                formData.append("selectedDay", dayValue);
+                formData.append("selectedMonth", monthValue);
+                formData.append("selectedYear", yearValue);
+
+                const csrfToken = getCSRFToken();
+
+                // Esegui la richiesta AJAX
+                fetch(dateForm.action, {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRFToken": csrfToken
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Data ricevuta:", data);
+                    updatePageContent(data); // Aggiorna la pagina con i dati ricevuti
+                })
+                .catch(error => console.error("Errore:", error));
 
             });
             daysEl.appendChild(day);

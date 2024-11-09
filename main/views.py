@@ -1,4 +1,5 @@
 from allauth.socialaccount.models import SocialAccount, SocialToken
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import LoginForm, RegisterForm
 from django.contrib.auth import login, authenticate
@@ -9,6 +10,10 @@ from datetime import datetime, date
 from types import NoneType
 import re
 
+#COSTANTI:
+DAY_SELECTED = None
+MONTH_SELECTED = None
+YEAR_SELECTED = None
 
 # FILTER FUNCTIONS:
 
@@ -75,68 +80,115 @@ def esami(request):
 
 
 def calendar(request):
+    global DAY_SELECTED, MONTH_SELECTED, YEAR_SELECTED
+    aule = Aula.objects.all()
+    aule_select_filter = Aula.objects.all()
+    aule_disponibilita = {}
+    anno_esame = request.POST.get('anno_esame')
+    periodo_esame = request.POST.get('periodo_esame')
+    aula_visible = request.POST.get('aula_visible')
+    disp_input = request.POST.get('disp-input')
     facolta_id = request.GET.get('facolta_id')
     real_facolta_id = None
     if facolta_id is not None:
         real_facolta_id = facolta_id
-    aule = None
-    aule_select_filter = Aula.objects.all()
-    aule_disponibilita = {}
-    anno_esame = request.GET.get('anno_esame')
-    periodo_esame = request.GET.get('periodo_esame')
-    aula_visible = request.POST.get('aula_visible')
-    disp_input = request.POST.get('disp-input')
 
-    day, month, year = checkDisp(disp_input)
+    day_false = request.POST.get('selectedDay')
+    month_false = request.POST.get('selectedMonth')
+    year_false = request.POST.get('selectedYear')
 
-    if aula_visible is None or aula_visible == "":
-        aule = Aula.objects.all()
+    if day_false is None and month_false is None and year_false is None and DAY_SELECTED is None and MONTH_SELECTED is None and YEAR_SELECTED is None:
+        today = datetime.today()
+        day = today.strftime("%d")
+        month = today.strftime("%m")
+        year = today.strftime("%Y")
     else:
-        aule = Aula.objects.filter(nome=aula_visible)
-
-    if day is None and month is None and year is None:
-        day = request.POST.get('day')
-        month = request.POST.get('month')
-        year = request.POST.get('year')
-        if day is None and month is None and year is None:
-            giorno_esame = request.GET.get('giorno_esame')
-            if giorno_esame == "" or giorno_esame is None:
-                today = datetime.today()
-                day = today.strftime("%d")
-                month = today.strftime("%m")
-                year = today.strftime("%Y")
-            else:
-                date_object = datetime.strptime(giorno_esame, "%b. %d, %Y")
-                day = date_object.day
-                month = date_object.month
-                year = date_object.year
+        if DAY_SELECTED is None and MONTH_SELECTED is None and YEAR_SELECTED is None:
+            day = day_false
+            month = month_false
+            year = year_false
+            DAY_SELECTED = day_false
+            MONTH_SELECTED = month_false
+            YEAR_SELECTED = year_false
+        else:
+            day = DAY_SELECTED
+            month = MONTH_SELECTED
+            year = YEAR_SELECTED
+            if disp_input:
+                day, month, year = checkDisp(disp_input)
 
 
-    data_attuale = date(int(year), int(month), int(day))
-    data_stringa = data_attuale.strftime("%d/%m/%Y")
-    appelli_attuali = filterAppelli(anno_esame, periodo_esame, data_stringa, real_facolta_id)
 
-    for a in aule:
-        disp = DisponibilitaOraria.objects.filter(aula=a, data=data_attuale)
-        if not disp:
-            try:
-                create.createAuleDisponibilita(day, month, year)
-                disp = DisponibilitaOraria.objects.filter(aula=a, data=data_attuale)
 
-            except:
-                pass
-        aule_disponibilita[a] = disp
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        day_false = request.POST.get('selectedDay')
+        month_false = request.POST.get('selectedMonth')
+        year_false = request.POST.get('selectedYear')
+        if day_false is not None and month_false is not None and year_false is not None:
+            day = day_false
+            month = month_false
+            year = year_false
+            DAY_SELECTED = day_false
+            MONTH_SELECTED = month_false
+            YEAR_SELECTED = year_false
 
-    context = {
-        "aule": aule,
-        "data_attuale": data_attuale,
-        "aule_disponibilita": aule_disponibilita,
-        "appelli": appelli_attuali,
-        "anno_esame": anno_esame,
-        "periodo_esame": periodo_esame,
-        "aule_select_filter": aule_select_filter
-    }
-    return render(request, "main/calendar.html", context)
+        data_attuale = date(int(year), int(month), int(day))
+        data_stringa = data_attuale.strftime("%d/%m/%Y")
+        appelli_attuali = filterAppelli(anno_esame, periodo_esame, data_stringa, facolta_id)
+
+        if aula_visible:
+            aule = Aula.objects.filter(nome=aula_visible)
+
+        for aula in aule:
+            disp = DisponibilitaOraria.objects.filter(aula=aula, data=data_attuale)
+            aule_disponibilita[aula.nome] = [{"ora_inizio": d.ora_inizio, "ora_fine": d.ora_fine} for d in
+                                             disp] if disp else "No disp."
+
+            # Risposta JSON per AJAX
+        return JsonResponse({
+            "appelli": [
+                {
+                    "esame": appello.esame.nome,
+                    "data": appello.data
+                } for appello in appelli_attuali
+            ],
+            "aule_disponibilita": aule_disponibilita,
+            "data_attuale": data_stringa,
+            "anno_esame": anno_esame,
+            "periodo_esame": periodo_esame,
+
+        })
+    else:
+        data_attuale = date(int(year), int(month), int(day))
+        data_stringa = data_attuale.strftime("%d/%m/%Y")
+        appelli_attuali = filterAppelli(anno_esame, periodo_esame, data_stringa, real_facolta_id)
+        for a in aule:
+            disp = DisponibilitaOraria.objects.filter(aula=a, data=data_attuale)
+            if not disp:
+                try:
+                    create.createAuleDisponibilita(day, month, year)
+                    disp = DisponibilitaOraria.objects.filter(aula=a, data=data_attuale)
+
+                except:
+                    pass
+            aule_disponibilita[a] = disp
+        context = {
+            "aule": aule,
+            "data_attuale": data_attuale,
+            "aule_disponibilita": aule_disponibilita,
+            "appelli": appelli_attuali,
+            "anno_esame": anno_esame,
+            "periodo_esame": periodo_esame,
+            "aule_select_filter": aule_select_filter,
+            "day_selected": DAY_SELECTED,
+            "month_selected": MONTH_SELECTED,
+            "year_selected": YEAR_SELECTED,
+        }
+        return render(request, "main/calendar.html", context)
+
+
+
+
 
 
 def login_view(request):
