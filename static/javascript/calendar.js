@@ -320,6 +320,7 @@ gotoBtn.addEventListener("click", () => {
                 if (!selectedDayFound && dayElement.textContent == day) {
                     dayElement.classList.add("today");  // Aggiunge l'evidenziazione al giorno selezionato
                     selectedDayFound = true;
+                    dayElement.click();
                 }
             });
             gotoInput.value = "";
