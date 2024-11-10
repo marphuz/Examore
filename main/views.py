@@ -81,6 +81,7 @@ def esami(request):
 
 def calendar(request):
     global DAY_SELECTED, MONTH_SELECTED, YEAR_SELECTED
+    facolta = Facolta.objects.all()
     aule = Aula.objects.all()
     aule_select_filter = Aula.objects.all()
     aule_disponibilita = {}
@@ -89,9 +90,11 @@ def calendar(request):
     aula_visible = request.POST.get('aula_visible')
     disp_input = request.POST.get('disp-input')
     facolta_id = request.GET.get('facolta_id')
-    real_facolta_id = None
+    facolta_appelli = None
     if facolta_id is not None:
-        real_facolta_id = facolta_id
+        facolta_appelli = facolta_id
+    else:
+        facolta_appelli = request.POST.get('facolta_appelli')
 
     day_false = request.POST.get('selectedDay')
     month_false = request.POST.get('selectedMonth')
@@ -117,8 +120,7 @@ def calendar(request):
             if disp_input:
                 day, month, year = checkDisp(disp_input)
 
-
-
+    data_titolo_aule = None
 
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         day_false = request.POST.get('selectedDay')
@@ -134,6 +136,10 @@ def calendar(request):
 
         data_attuale = date(int(year), int(month), int(day))
         data_stringa = data_attuale.strftime("%d/%m/%Y")
+
+        if facolta_appelli is not None:
+            facolta_id = facolta_appelli
+
         appelli_attuali = filterAppelli(anno_esame, periodo_esame, data_stringa, facolta_id)
 
         if aula_visible:
@@ -161,7 +167,7 @@ def calendar(request):
     else:
         data_attuale = date(int(year), int(month), int(day))
         data_stringa = data_attuale.strftime("%d/%m/%Y")
-        appelli_attuali = filterAppelli(anno_esame, periodo_esame, data_stringa, real_facolta_id)
+        appelli_attuali = filterAppelli(anno_esame, periodo_esame, data_stringa, facolta_id)
         for a in aule:
             disp = DisponibilitaOraria.objects.filter(aula=a, data=data_attuale)
             if not disp:
@@ -172,22 +178,21 @@ def calendar(request):
                 except:
                     pass
             aule_disponibilita[a] = disp
-        context = {
-            "aule": aule,
-            "data_attuale": data_attuale,
-            "aule_disponibilita": aule_disponibilita,
-            "appelli": appelli_attuali,
-            "anno_esame": anno_esame,
-            "periodo_esame": periodo_esame,
-            "aule_select_filter": aule_select_filter,
-            "day_selected": DAY_SELECTED,
-            "month_selected": MONTH_SELECTED,
-            "year_selected": YEAR_SELECTED,
-        }
-        return render(request, "main/calendar.html", context)
 
-
-
+    context = {
+        "aule": aule,
+        "data_attuale": data_stringa,
+        "aule_disponibilita": aule_disponibilita,
+        "appelli": appelli_attuali,
+        "anno_esame": anno_esame,
+        "periodo_esame": periodo_esame,
+        "aule_select_filter": aule_select_filter,
+        "day_selected": DAY_SELECTED,
+        "month_selected": MONTH_SELECTED,
+        "year_selected": YEAR_SELECTED,
+        "facolta": facolta,
+    }
+    return render(request, "main/calendar.html", context)
 
 
 

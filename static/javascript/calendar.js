@@ -93,6 +93,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Aggiorna la data visualizzata
             document.getElementById("data-titolo").textContent = data.data_attuale + ":";
+            document.getElementById("dta").textContent = "Disponibilità aule giorno: " + data.data_attuale;
+
         }
 });
 
@@ -141,7 +143,9 @@ function updatePageContent(data) {
 
             // Aggiorna la data visualizzata
             document.getElementById("data-titolo").textContent = data.data_attuale + ":";
+            document.getElementById("dta").textContent = "Disponibilità aule giorno: " + data.data_attuale;
         }
+
 
 
 //OTTENERE IL CSRF TOKEN:

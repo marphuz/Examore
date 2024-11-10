@@ -127,10 +127,12 @@
         <form id="filter-form" method="post" action="{% url 'calendar' %}">
             {% csrf_token %}
             <div>
-                <label class="f-label">Seleziona il Giorno:</label>
-                <select class="f-select" name="giorno_esame">
-                    <option value="1" >Giorno cliccato sul calendario</option>
-                    <option value="">Data Odierna</option>
+                <label class="f-label">Seleziona la Facoltà degli Appelli:</label>
+                <select class="f-select" name="facolta_appelli">
+                    <option value="">Tutte le Facoltà</option>
+                    {% for f in facolta %}
+                        <option value="{{f.id}}" >{{f.nome}}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div>
@@ -158,15 +160,11 @@
     </div>
 
     <div class="aule-container">
-        {% if day_selected is not None and month_selected is not None and year_selected is not None %}
+
             <div class="title-container">
-                <h4>Disponibilità Aule per il giorno {{day_selected}}/{{month_selected}}/{{year_selected}}:</h4>
+                <h4 id="dta">Disponibilità aule giorno: {{data_attuale}}</h4>
             </div>
-        {% else %}
-            <div class="title-container">
-                <h4>Disponibilità Aule per il giorno {{data_attuale}}:</h4>
-            </div>
-        {% endif %}
+
         <div class="aule-filter">
             <h4>Filtri per le Aule:</h4>
             <form id="aule-form" method="post" action="{% url 'calendar' %}">
