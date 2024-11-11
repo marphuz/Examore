@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const filterForm = document.getElementById("filter-form");
         const auleForm = document.getElementById("aule-form");
         const dateForm = document.getElementById("dateForm");
+        const todayForm = document.getElementById("today-form");
 
         // Funzione per gestire la richiesta AJAX
         function handleFormSubmit(event, form) {
@@ -44,6 +45,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (dateForm){
             dateForm.addEventListener("submit", function(event){
                 handleFormSubmit(event, dateForm);
+            });
+        }
+        if (todayForm){
+            dateForm.addEventListener("submit", function(event){
+                handleFormSubmit(event, todayForm);
             });
         }
 
@@ -350,6 +356,7 @@ todayBtn.addEventListener("click", () => {
         dayElement.classList.remove("today"); // Rimuove l'eventuale evidenziazione "today" esistente
         if (dayElement.textContent == today.getDate()) {
             dayElement.classList.add("today"); // Aggiunge l'evidenziazione al giorno attuale
+            dayElement.click();
         }
     });
 });

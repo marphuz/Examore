@@ -80,7 +80,12 @@
                         <input type="text" placeholder="gg/mm/yyyy" class="date-input">
                         <button class="goto-btn" type="submit">Cerca</button>
                     </div>
-                    <button class="today-btn">Oggi</button>
+                  <!--  <form id="today-form" method="post">
+                        {% csrf_token %}
+                        <button class="today-btn" type="submit">Oggi</button>
+                    </form> -->
+                    <button class="today-btn" type="submit">Oggi</button>
+
                 </div>
                 <form id="dateForm" method="POST" action="{% url 'calendar' %}" style="display: none;">
                     {% csrf_token %}
