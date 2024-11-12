@@ -588,7 +588,7 @@ body {
 .aule-filter{
     display:flex;
     width:1300px;
-    height:300px;
+    height:400px;
     background:#f48c06;
     flex-direction:column;
     text-align:center;
@@ -683,4 +683,33 @@ body {
 #data-titolo{
     font-size:35px;
     font-weight:500;
+}
+.scraping-alert{
+    margin-top:10px;
+    width:1300px;
+    height:100px;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content: center;
+}
+
+.scr-info{
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight:600;
+
+}
+
+.scr-btn{
+    color:#000;
+    background:#fed0bb;
+    border-radius:10px;
+    border:2px solid #000;
+    padding: 5px 10px;
+    margin-bottom:5px;
+}
+
+.scr-btn:hover{
+    transform:scale(1.07);
 }

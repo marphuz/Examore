@@ -102,26 +102,26 @@
                 <div class="event-day"></div>
             </div>
             <div class="events">
-                {% if appelli %}
-                    {% for appello in appelli %}
+                    {% if appelli %}
+                        {% for appello in appelli %}
+                            <div class="event">
+                                <div class="title">
+                                    <i class="fas fa-circle"></i>
+                                    <h3 class="event-title">{{appello.esame}}</h3>
+                                </div>
+                                <div class="event-time">
+                                    {{appello.data}}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
                         <div class="event">
-                            <div class="title">
-                                <i class="fas fa-circle"></i>
-                                <h3 class="event-title">{{appello.esame}}</h3>
-                            </div>
-                            <div class="event-time">
-                                {{appello.data}}
-                            </div>
+                                <div class="title">
+                                    <i class="fas fa-circle"></i>
+                                    <h3 class="event-title">Nessun Appello Trovato</h3>
+                                </div>
                         </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="event">
-                            <div class="title">
-                                <i class="fas fa-circle"></i>
-                                <h3 class="event-title">Nessun Appello Trovato</h3>
-                            </div>
-                    </div>
-                {% endif %}
+                    {% endif %}
             </div>
         </div>
 
@@ -191,8 +191,10 @@
                 <button type="submit" class="aule-btn">Applica Filtri Aule</button>
                 <a href="/calendar"><button class="reset-aule-button">Resetta Filtri Aule</button></a>
             </form>
-
+            <div class="scraping-alert"></div>
         </div>
+
+
 
         <div class="real-aule-container">
             <div class="left-aule">

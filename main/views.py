@@ -9,11 +9,13 @@ from .models import Facolta, Esame, AppelloEsame, Aula, DisponibilitaOraria
 from datetime import datetime, date
 from types import NoneType
 import re
+from django.urls import reverse
 
-#COSTANTI:
+# COSTANTI:
 DAY_SELECTED = None
 MONTH_SELECTED = None
 YEAR_SELECTED = None
+CRIT = None
 
 # FILTER FUNCTIONS:
 
@@ -46,11 +48,14 @@ def filterAppelli(anno_esame, periodo_esame, data_stringa, facolta_id=None):
         if anno_esame == 0 and periodo_esame == 0:
             appelli_attuali = AppelloEsame.objects.filter(data__icontains=data_stringa, esame__facolta=f)
         elif anno_esame != 0 and periodo_esame == 0:
-            appelli_attuali = AppelloEsame.objects.filter(data__icontains=data_stringa, esame__facolta=f, esame__anno=anno_esame)
+            appelli_attuali = AppelloEsame.objects.filter(data__icontains=data_stringa, esame__facolta=f,
+                                                          esame__anno=anno_esame)
         elif anno_esame == 0 and periodo_esame != 0:
-            appelli_attuali = AppelloEsame.objects.filter(data__icontains=data_stringa, esame__facolta=f, esame__semestre=periodo_esame)
+            appelli_attuali = AppelloEsame.objects.filter(data__icontains=data_stringa, esame__facolta=f,
+                                                          esame__semestre=periodo_esame)
         else:
-            appelli_attuali = AppelloEsame.objects.filter(data__icontains=data_stringa, esame__facolta=f, esame__anno=anno_esame,
+            appelli_attuali = AppelloEsame.objects.filter(data__icontains=data_stringa, esame__facolta=f,
+                                                          esame__anno=anno_esame,
                                                           esame__semestre=periodo_esame)
 
     return appelli_attuali
@@ -90,6 +95,7 @@ def calendar(request):
     aula_visible = request.POST.get('aula_visible')
     disp_input = request.POST.get('disp-input')
     facolta_id = request.GET.get('facolta_id')
+    var_disp = False
     facolta_appelli = None
     if facolta_id is not None:
         facolta_appelli = facolta_id
@@ -145,12 +151,18 @@ def calendar(request):
         if aula_visible:
             aule = Aula.objects.filter(nome=aula_visible)
 
+
         for aula in aule:
             disp = DisponibilitaOraria.objects.filter(aula=aula, data=data_attuale)
-            aule_disponibilita[aula.nome] = [{"ora_inizio": d.ora_inizio, "ora_fine": d.ora_fine} for d in
-                                             disp] if disp else "No disp."
+            if not disp:
+                var_disp = True
+                #create.createAuleDisponibilita(day, month, year)
+                #disp = DisponibilitaOraria.objects.filter(aula=aula, data=data_attuale)
 
-            # Risposta JSON per AJAX
+            aule_disponibilita[aula.nome] = [{"ora_inizio": d.ora_inizio, "ora_fine": d.ora_fine} for d in
+                                             disp]
+
+        # Risposta JSON per AJAX
         return JsonResponse({
             "appelli": [
                 {
@@ -162,6 +174,7 @@ def calendar(request):
             "data_attuale": data_stringa,
             "anno_esame": anno_esame,
             "periodo_esame": periodo_esame,
+            "var_disp": var_disp,
 
         })
     else:
@@ -170,13 +183,14 @@ def calendar(request):
         appelli_attuali = filterAppelli(anno_esame, periodo_esame, data_stringa, facolta_id)
         for a in aule:
             disp = DisponibilitaOraria.objects.filter(aula=a, data=data_attuale)
-            if not disp:
-                try:
-                    create.createAuleDisponibilita(day, month, year)
-                    disp = DisponibilitaOraria.objects.filter(aula=a, data=data_attuale)
 
-                except:
-                    pass
+            # if not disp:
+            #    try:
+            #       create.createAuleDisponibilita(day, month, year)
+            #      disp = DisponibilitaOraria.objects.filter(aula=a, data=data_attuale)
+
+            # except:
+            #    pass
             aule_disponibilita[a] = disp
 
     context = {
@@ -191,9 +205,39 @@ def calendar(request):
         "month_selected": MONTH_SELECTED,
         "year_selected": YEAR_SELECTED,
         "facolta": facolta,
+        "var_disp": var_disp,
     }
     return render(request, "main/calendar.html", context)
 
+
+def scrapingOnDemand(request):
+    data_attuale = request.GET.get('data_attuale')
+    day, month, year = None, None, None
+
+    if request.method == 'POST':
+        data_attuale = request.POST.get('data_attuale')
+        if data_attuale is not None:
+            day = data_attuale[:2]
+            month = data_attuale[3:5]
+            year = data_attuale[6:]
+
+        if 'scr' in request.POST:
+            if day is not None and month is not None and year is not None:
+                try:
+                    create.createAuleDisponibilita(day, month, year)
+                except:
+                    pass
+
+            return redirect('calendar')
+        else:
+
+            return redirect('calendar')
+
+    context = {
+        "data_attuale": data_attuale,
+    }
+
+    return render(request, "main/scraping.html", context)
 
 
 def login_view(request):

@@ -53,6 +53,9 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
+
+
+
         // Funzione per aggiornare la pagina con i dati ricevuti
         function updatePageContent(data) {
             // Aggiorna gli appelli
@@ -150,6 +153,18 @@ function updatePageContent(data) {
             // Aggiorna la data visualizzata
             document.getElementById("data-titolo").textContent = data.data_attuale + ":";
             document.getElementById("dta").textContent = "Disponibilità aule giorno: " + data.data_attuale;
+
+            const scrapingAlertContainer = document.querySelector(".scraping-alert");
+            if (data.var_disp) {
+                const encodedDate = encodeURIComponent(data.data_attuale);
+                scrapingAlertContainer.innerHTML = `
+                    <div >
+                        <p class="scr-info">Non ci sono disponibilità per nessuna aula</p>
+                        <a href="/scraping?data_attuale=${encodedDate}"><button class="scr-btn">Vai alla pagina per lo scraping</button></a>
+                    </div>`;
+            } else {
+                scrapingAlertContainer.innerHTML = "";
+            }
         }
 
 

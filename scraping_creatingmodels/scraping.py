@@ -27,7 +27,7 @@ TITLE_AULE_PAGINA_3 = "a[title='Lab. P0.1 (FA-0A), Lab. P2.5 (FA-2E), Laboratori
 # FUNZIONI:
 def initializeDriver():
     chrome_options = Options()
-    #chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless")
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
