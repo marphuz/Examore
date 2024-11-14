@@ -3,7 +3,6 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import LoginForm, RegisterForm
 from django.contrib.auth import login, authenticate
-from .utils import create_google_calendar_event
 from scraping_creatingmodels import create, scraping
 from .models import Facolta, Esame, AppelloEsame, Aula, DisponibilitaOraria
 from datetime import datetime, date
