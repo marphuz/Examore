@@ -6,9 +6,7 @@ from django.contrib.auth import login, authenticate
 from scraping_creatingmodels import create, scraping
 from .models import Facolta, Esame, AppelloEsame, Aula, DisponibilitaOraria
 from datetime import datetime, date
-from types import NoneType
 import re
-from django.urls import reverse
 
 # COSTANTI:
 DAY_SELECTED = None

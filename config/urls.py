@@ -1,5 +1,5 @@
 """
-URL configuration for Examore project.
+URL configuration for config project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
@@ -16,8 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("main.urls")),
 ]
+# Enable if we need to access media
+# The following works only if DEBUG==True. We use UNPREFIXED_MEDIA_URL, to make it work from Apache
+# when running from a subfolder which provides SCRIPT_NAME to the WSGI application
+urlpatterns += static(settings.UNPREFIXED_MEDIA_URL, document_root=settings.MEDIA_ROOT)

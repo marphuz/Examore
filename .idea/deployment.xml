@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="administrator@services.ing.unimore.it:22 password" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="administrator@services.ing.unimore.it:22 password (2)" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
+    <option name="confirmBeforeUploading" value="false" />
     <serverData>
-      <paths name="administrator@services.ing.unimore.it:22 password">
+      <paths name="administrator@services.ing.unimore.it:22 password (2)">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/administrator/django_websites/examore" local="$PROJECT_DIR$" />
+            <mapping deploy="/home/administrator/django_websites/examore" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
