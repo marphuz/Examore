@@ -1,0 +1,83 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Sincronizza con Google Calendar | Examore{% endblock %}
+
+{% block custom_css %}
+<style>
+    .sync-card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        margin-top: 2rem;
+    }
+    
+    .sync-header {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background-color: #f8764f;
+        color: white;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+    
+    .sync-header img {
+        height: 40px;
+        margin-left: 1rem;
+    }
+    
+    .sync-body {
+        padding: 2rem;
+    }
+    
+    .sync-footer {
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block main_content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="sync-card">
+            <div class="sync-header">
+                <h4 class="mb-0">Sincronizza con Google Calendar</h4>
+                <img src="{% static 'img/google-calendar-icon.png' %}" alt="Google Calendar">
+            </div>
+            <div class="sync-body">
+                <p>
+                    Puoi sincronizzare gli appelli d'esame con il tuo Google Calendar. 
+                    Scegli se sincronizzare tutti gli appelli o solo quelli di una facoltà specifica.
+                </p>
+                
+                <form method="post" action="{% url 'sync_calendar' %}">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="facolta_id" class="form-label">Facoltà (opzionale):</label>
+                        <select class="form-select" id="facolta_id" name="facolta_id">
+                            <option value="">Tutti gli appelli</option>
+                            {% for f in facolta %}
+                            <option value="{{ f.id }}">{{ f.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <img src="{% static 'img/google-calendar-icon.png' %}" alt="Google Calendar" style="height: 24px; margin-right: 8px; filter: brightness(0) invert(1);">
+                        Sincronizza con Google Calendar
+                    </button>
+                </form>
+            </div>
+            <div class="sync-footer">
+                <a href="{% url 'calendar' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left mr-2"></i> Torna al Calendario
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

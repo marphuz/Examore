@@ -45,6 +45,12 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'django_extensions',
+    'django_crontab',
+
+]
+
+CRONJOBS = [
+    ('0 */6 * * *', 'main.tasks.run_sync_task', '>> /tmp/sync_appelli.log 2>&1')  # Ogni 6 ore
 ]
 
 MIDDLEWARE = [
@@ -147,13 +153,14 @@ SITE_ID = 1
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': '1060874290024-7k7t714kri239i06jbb4tqvsi1u0hmr2.apps.googleusercontent.com',
-            'secret': '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',
+            'client_id': '973528692771-7d4om4p64bmmbf6lnq23tt058agojjvf.apps.googleusercontent.com',
+            'secret': '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',
             'key': ''
         },
         'SCOPE': [
-            'profile',
-            'email',
+            'openid',
+            'https://www.googleapis.com/auth/userinfo.email',
+            'https://www.googleapis.com/auth/userinfo.profile',
             'https://www.googleapis.com/auth/calendar',
             'https://www.googleapis.com/auth/calendar.events'
         ],
@@ -163,7 +170,6 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
-
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",

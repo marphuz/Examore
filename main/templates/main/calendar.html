@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Examore | Calendario</title>
 
+    {% block head %}
+
+    <script>
+    // Variabili con i valori iniziali dei filtri dal server
+        const initialAnnoEsame = "{{ anno_esame|default_if_none:'' }}";
+        const initialPeriodoEsame = "{{ periodo_esame|default_if_none:'' }}";
+        const initialFacoltaId = "{{ facolta_id|default_if_none:'' }}";
+        const initialAulaVisible = "{{ aula_visible|default_if_none:'' }}";
+        const initialDay = "{{ day_selected|default_if_none:'' }}";
+        const initialMonth = "{{ month_selected|default_if_none:'' }}";
+        const initialYear = "{{ year_selected|default_if_none:'' }}";
+    </script>
+    {% endblock %}
+
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
      <link
       rel="stylesheet"
@@ -16,11 +31,68 @@
     {% load static %}
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/E.png' %}">
     <link rel="stylesheet" href="{% static 'style/calendar.css' %}">
+    <link rel="stylesheet" href="{% static 'style/google-calendar.css' %}">
 
     {% load custom_tags %}
 </head>
 
 <body>
+    <script>
+        // Aggiorna i link di sincronizzazione quando la pagina si carica
+        document.addEventListener('DOMContentLoaded', function() {
+            // Funzione per aggiornare i link di sincronizzazione
+            function updateSyncLinks() {
+                // Recupera i filtri da sessionStorage
+                const filtersJSON = sessionStorage.getItem('examoreFilters');
+                if (!filtersJSON) return;
+                
+                const filters = JSON.parse(filtersJSON);
+                
+                // Costruisci i parametri di query
+                let queryParams = [];
+                if (filters.anno_esame) queryParams.push(`anno_esame=${filters.anno_esame}`);
+                if (filters.periodo_esame) queryParams.push(`periodo_esame=${filters.periodo_esame}`);
+                if (filters.facolta_appelli) queryParams.push(`facolta_id=${filters.facolta_appelli}`);
+                
+                const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+                
+                // Aggiorna il link principale di sincronizzazione
+                const mainSyncLink = document.querySelector('.btn-sync-all');
+                if (mainSyncLink) {
+                    let href = mainSyncLink.getAttribute('href').split('?')[0];
+                    mainSyncLink.setAttribute('href', href + queryString);
+                }
+                
+                // Aggiorna i link di sincronizzazione singoli
+                document.querySelectorAll('.sync-icon').forEach(icon => {
+                    let href = icon.getAttribute('href').split('?')[0];
+                    icon.setAttribute('href', href + queryString);
+                });
+            }
+            
+            // Esegui subito e aggiungi un MutationObserver per aggiornare anche quando il DOM cambia
+            updateSyncLinks();
+            
+            // Osserva i cambiamenti nel contenitore degli eventi
+            const observer = new MutationObserver(() => {
+                updateSyncLinks();
+            });
+            
+            // Inizia a osservare il contenitore degli eventi
+            const eventsContainer = document.querySelector('.events');
+            if (eventsContainer) {
+                observer.observe(eventsContainer, { childList: true, subtree: true });
+            }
+            
+            // Aggiorna anche quando i form dei filtri vengono inviati
+            document.querySelectorAll('#filter-form, #aule-form').forEach(form => {
+                form.addEventListener('submit', () => {
+                    // Breve ritardo per assicurarsi che i filtri siano salvati
+                    setTimeout(updateSyncLinks, 100);
+                });
+            });
+        });
+    </script>
 
     <nav class="navbar navbar-expand-lg navbar-light navbar-custom" id="navbar-home">
         <div class="container-fluid">
@@ -55,6 +127,8 @@
       </div>
     </nav>
 
+    
+    
     <div class="container">
         <div class="left">
             <div class="calendar">
@@ -89,9 +163,9 @@
                 </div>
                 <form id="dateForm" method="POST" action="{% url 'calendar' %}" style="display: none;">
                     {% csrf_token %}
-                    <input type="hidden" name="day" id="selectedDay">
-                    <input type="hidden" name="month" id="selectedMonth">
-                    <input type="hidden" name="year" id="selectedYear">
+                    <input type="hidden" name="selectedDay" id="selectedDay" value="{{ day_selected|default:'' }}">
+                    <input type="hidden" name="selectedMonth" id="selectedMonth" value="{{ month_selected|default:'' }}">
+                    <input type="hidden" name="selectedYear" id="selectedYear" value="{{ year_selected|default:'' }}">
                 </form>
             </div>
 
@@ -101,31 +175,48 @@
                 <h4 id="data-titolo">{{data_attuale}}:</h4>
                 <div class="event-day"></div>
             </div>
-            <div class="events">
-                    {% if appelli %}
-                        {% for appello in appelli %}
-                            <div class="event">
-                                <div class="title">
-                                    <i class="fas fa-circle"></i>
-                                    <h3 class="event-title">{{appello.esame}}</h3>
-                                </div>
-                                <div class="event-time">
-                                    {{appello.data}}
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="event">
-                                <div class="title">
-                                    <i class="fas fa-circle"></i>
-                                    <h3 class="event-title">Nessun Appello Trovato</h3>
-                                </div>
-                        </div>
-                    {% endif %}
+            <div class="google-calendar-button">
+                <a href="{% url 'start_google_auth' %}" class="btn-sync-all">
+                    <img src="{% static 'img/google-calendar.png' %}" alt="Google Calendar" style="height: 24px; margin-right: 8px;">
+                    Sincronizza con Google Calendar
+                </a>
             </div>
+            <div class="events">
+                {% if appelli %}
+                {% for appello in appelli %}
+                    <div class="event">
+                        <div class="title">
+                            <i class="fas fa-circle"></i>
+                            <h3 class="event-title">{{appello.esame}}</h3>
+                            <a href="{% url 'sync_single_event' appello.id %}" class="sync-icon" title="Sincronizza questo appello con Google Calendar">
+                                <img src="{% static 'img/google-calendar.png' %}" alt="Sync" style="height: 20px; margin-left: 10px;">
+                            </a>
+                        </div>
+                        <div class="event-time">
+                            {{appello.data}}
+                        </div>
+                    </div>
+                {% endfor %}
+                {% else %}
+                    <div class="event">
+                        <div class="title">
+                            <i class="fas fa-circle"></i>
+                            <h3 class="event-title">Nessun Appello Trovato</h3>
+                        </div>
+                    </div>
+                {% endif %}
+                </div>
         </div>
-
+        
+        {% if request.GET.sync_success %}
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            <strong>Sincronizzazione completata!</strong> Sono stati aggiunti {{ request.GET.events_created }} appelli al tuo Google Calendar.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
     </div>
+
+    
 
     <div class="filter-container">
         <h4>Filtri per gli Appelli:</h4>
@@ -136,7 +227,7 @@
                 <select class="f-select" name="facolta_appelli">
                     <option value="">Tutte le Facoltà</option>
                     {% for f in facolta %}
-                        <option value="{{f.id}}" >{{f.nome}}</option>
+                    <option value="{{ f.id }}" {% if facolta_id == f.id|slugify %}selected{% endif %}>{{ f.nome }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -144,22 +235,23 @@
                 <label class="f-label">Seleziona l'Anno per i Corsi degli Appelli:</label>
                 <select class="f-select" name="anno_esame">
                     <option value="">Scegli Anno</option>
-                    <option value="1" >1° anno</option>
-                    <option value="2">2° anno</option>
-                    <option value="3">3° anno</option>
+                   
+                    <option value="1" {% if anno_esame == '1' %}selected{% endif %}>1° Anno</option>
+                    <option value="2" {% if anno_esame == '2' %}selected{% endif %}>2° Anno</option>
+                    <option value="3" {% if anno_esame == '3' %}selected{% endif %}>3° Anno</option>
                 </select>
             </div>
             <div>
                 <label class="f-label">Seleziona il Periodo per i Corsi degli Appelli:</label>
                 <select class="f-select" name="periodo_esame">
                     <option value="">Scegli Periodo</option>
-                    <option value="1">1° semestre</option>
-                    <option value="2">2° semestre</option>
-                    <option value="3">Ciclo Annuale Unico</option>
+                    <option value="1" {% if periodo_esame == '1' %}selected{% endif %}>1° Semestre</option>
+                    <option value="2" {% if periodo_esame == '2' %}selected{% endif %}>2° Semestre</option>
+                    <option value="3" {% if periodo_esame == '3' %}selected{% endif %}>Ciclo Annuale Unico</option>
                 </select>
             </div>
             <button type="submit" class="filter-button">Applica Filtri Appelli</button>
-            <a href="/calendar"><button class="reset-filter-button">Resetta Filtri Appelli</button></a>
+            <button type="button" class="reset-filter-button">Resetta Filtri Appelli</button>
 
         </form>
     </div>
@@ -179,7 +271,8 @@
                     <select class="aula-select" name="aula_visible">
                         <option value="">Tutte le aule</option>
                         {% for aula in aule_select_filter %}
-                            <option value="{{aula.nome}}">{{aula.nome}}</option>
+                        <option value="{{ a.nome }}" {% if aula_visible == a.nome %}selected{% endif %}>{{ a.nome }}</option>
+
                         {% endfor %}
                     </select>
                 </div>
@@ -189,7 +282,7 @@
                     <button  type="submit" class="disp-btn">Mostra disponibilità</button>
                 </div>
                 <button type="submit" class="aule-btn">Applica Filtri Aule</button>
-                <a href="/calendar"><button class="reset-aule-button">Resetta Filtri Aule</button></a>
+                <button type="button" class="reset-aule-button">Resetta Filtri Aule</button>
             </form>
             <div class="scraping-alert"></div>
         </div>
@@ -221,7 +314,6 @@
         </div>
 
     </div>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src={% static "javascript/calendar.js" %}></script>

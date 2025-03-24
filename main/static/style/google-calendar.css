@@ -1,0 +1,102 @@
+/* Stile per il pulsante Google Calendar */
+.google-calendar-button {
+    position: absolute;
+    top:16px;          /* Allineato con la data */
+    right: 50px; 
+    left:  262px;     /* Distanza dal bordo destro */
+    z-index: 10;
+}
+
+.today-date {
+    display: flex;      /* Usa flexbox per posizionare elementi in linea */
+    align-items: center;
+    justify-content: space-between;
+    width: 10   0%;
+    position: relative;
+}
+
+.btn-sync-all {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 10px;  /* Ridotto padding verticale */
+    background-color: #4285F4;
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+     /* Impedisce il testo di andare a capo */
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-sync-all:hover {
+    background-color: #3367D6;
+    transform: scale(1.05);
+    color: white;
+    text-decoration: none;
+}
+
+.sync-icon {
+    display: inline-block;
+    cursor: pointer;
+    transition: transform 0.3s;
+    vertical-align: middle;
+}
+
+.sync-icon:hover {
+    transform: scale(1.2);
+}
+
+/* Aggiungi questi stili al file google-calendar.css */
+
+.event {
+    position: relative;  /* Per posizionare l'icona in modo assoluto rispetto all'evento */
+}
+
+.event .title {
+    position: relative;
+    padding-right: 50px;  /* Spazio per l'icona */
+    display: flex;
+    align-items: center;
+}
+
+.sync-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+.sync-icon img {
+    height: 28px !important;
+    width: auto;
+    transition: transform 0.2s;
+}
+
+.sync-icon:hover img {
+    transform: scale(1.3);
+}
+
+/* Impedisci agli eventi di catturare i click su elementi figli */
+.event * {
+    pointer-events: auto;
+}
+
+/* Per dispositivi mobili */
+@media (max-width: 768px) {
+    .today-date {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .google-calendar-button {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin: 10px 0;
+    }
+}

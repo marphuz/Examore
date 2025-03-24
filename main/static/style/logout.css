@@ -1,6 +1,6 @@
 #navbar-logo{
     height:100px;
-    width=auto;
+    width:auto;
     padding: 0px 0px 0px 0px;
 }
 
@@ -74,6 +74,7 @@ body {
     background: linear-gradient(to bottom, #ffffff, #ff9900);
 }
 
+
 .container {
     max-width: 1000px;
     margin:150px 0px 0px 30px;
@@ -83,38 +84,8 @@ body {
     animation: titleSlide 2s ease-in-out;
 }
 
-.register-form{
-    margin-top:10px;
-}
-
-.register-form label{
-    color:#000;
-    margin-top: 30px;
-}
-
-.register-form input{
-    height:50px;
-    width:350px;
-    margin-bottom:0px;
-    margin: 0px 0px 0px 310px;
-    border-width:2px;
-    border-color:#000;
-    border-radius:20px;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-}
-
-.register-form input:focus, textarea:focus, select:focus {
-    border-color:#e85d04;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-    outline:none;
-}
-
-.form-container input{
-    margin-top:20px;
-}
-
-.register-btn{
-    margin: 20px 0px 50px 0px;
+.login-redirect-btn{
+    margin: 50px 0px 50px 0px;
     display: inline-block;
     padding: 10px 30px;
     font-size: 18px;
@@ -127,12 +98,11 @@ body {
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
-.register-btn:hover{
+.login-redirect-btn:hover{
     background-color: #ff9900;
     transform: scale(1.1);
     font-weight:bold;
 }
-
 
 @keyframes titleSlide {
     from {

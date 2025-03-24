@@ -5,6 +5,7 @@ from django.db import connection
 from selenium.common import TimeoutException
 from datetime import datetime, date
 from django.core.exceptions import ObjectDoesNotExist
+from main.autosync import sync_appelli_changes
 
 
 def createFacolta():
@@ -56,6 +57,8 @@ def createAppelli(index=None):
             createAppelli(j)
             break
         j += 1
+    
+    sync_appelli_changes()
 
 
 def createAule():
